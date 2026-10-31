@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "../../../../ジーズアカデミー/20261021_課題/html"
+		},
+		{
+			"path": "../../../../ジーズアカデミー/課題/01_チーズアカデミー/cheese_academy"
+		},
+		{
+			"path": "../../../../ジーズアカデミー/課題/github"
+		}
+	],
+	"settings": {
+		"liveServer.settings.port": 5501,
+		"liveServer.settings.multiRootWorkspaceName": "cheese_academy"
+	}
+}
