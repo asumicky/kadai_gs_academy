@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ゆずれない一本道</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=WDXL+Lubrifont+JP+N&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/janken.css">
+</head>
+
+<body>
+
+    <!-- モーダル　スタート -->
+    <div class="modal js-modal" id="start_box">
+        <div class="modal-container">
+            <!-- モーダル内のコンテンツ -->
+            <div class="modal-content">
+                    <h1>ゆずれない一本道</h1>
+                    <p class="start-text">
+                        狭い道で対向車が来てしまった!!<br>
+                        運転手がじゃんけんで勝負を挑んできた!!<br>
+                        じゃんけんに勝ってすすもう!!
+                    </p>
+                    <img src="image/computer.webp" alt="">
+                <button class="start-button">
+                    <div>
+                        <p>START</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- モーダル　じゃんけん -->
+    <div class="modal js-modal" id="janken_battle_box">
+        <div class="modal-container">
+            <!-- モーダル内のコンテンツ -->
+            <div class="modal-content">
+                <div>
+                    <h2>じゃんけん...</h2>
+                    <div class="myhands">
+                        <button class="button" id="rock">
+                            <img src="image/janken_gu.webp" alt="">
+                        </button>
+                        <button class="button" id="scissors">
+                            <img src="image/janken_choki.webp" alt="">
+                        </button>
+                        <button class="button" id="paper">
+                            <img src="image/janken_pa.webp" alt="">
+                        </button>
+                    </div>
+                    <p>どれをだすかえらんでね</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- モーダル　じゃんけん結果 -->
+    <div class="modal js-modal" id="result_box">
+        <div class="modal-container">
+            <div class="modal-body">
+                <!-- モーダル内のコンテンツ -->
+                <div class="modal-content">
+                    <div>
+                        <h2>ぽん!</h2>
+                        <div class="battle-result">
+                            <div class="janken_box">
+                                <p>相手</p>
+                                <div id="janken_computer">
+                                    <div class="button" id="rock">
+                                        <img id="janken_computer_img" src="" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="janken_box">
+                                <p>自分</p>
+                                <div id="janken_player">
+                                    <div class="button" id="rock">
+                                        <img id="janken_player_img" src="" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="janken_result">
+                            <p>結果</p>
+                        </div>
+                        <button class="gray-button">
+                            <div>
+                                <p>次へ</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- モーダル　最終結果 -->
+    <div class="modal js-modal" id="final_result_box">
+        <div class="modal-container">
+            <div class="modal-body">
+                <!-- モーダル内のコンテンツ -->
+                <div class="modal-content">
+                    <div>
+                        <h2>どちらかの勝ち</h2>
+                        <div class="final_result">
+                            <div class="final_image">
+                                <img src="" alt="" class="computer_win">
+                                <!-- <img src="image/computer_lose.webp" alt="" class="computer_lose"> -->
+                            </div>
+                            <div class="final_text">
+                                <p class="computer_win">この一本道の主役が誰か……<br>これでわかったようだなァッ！</p>
+                                <!-- <p class="computer_lose">こ、このオレが……<br>道もッ！ 勝ちもッ！<br>ゆずるというのかァーーッ！</p> -->
+                            </div>
+                            <button class="gray-button">
+                                <div>
+                                    <p>もう一度遊ぶ</p>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <main>
+        <section class="score">
+            <div class="computer-count"><p>相手<span>0</span></p></div>
+            <div class="match-count">5回勝負</div>
+            <div class="player-count"><p>自分<span>0</span></p></div>
+        </section>
+
+        <section id="car">
+            <img src="image/car.webp" alt="">
+        </section>
+    </main>
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="js/janken.js"></script>
+</body>
+
+</html>

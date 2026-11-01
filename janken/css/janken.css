@@ -1,0 +1,284 @@
+
+
+/* フォント指定
+.noto-sans-jp-<uniquifier> {
+  font-family: "Noto Sans JP", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal;
+}
+
+.wdxl-lubrifont-jp-n-regular {
+  font-family: "WDXL Lubrifont JP N", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+*/
+
+
+body {
+    max-width: 450px;
+    margin: 0 auto;
+    font-family: "Noto Sans JP", sans-serif;
+    background-color: #222;
+}
+
+.modal#janken_battle_box,
+.modal#result_box,
+.modal#final_result_box {
+    display:none;
+}
+
+
+/* ----------共通モーダルの設定　ここから------------- */
+
+/* 画面全体を覆う背景 */
+.modal {
+    position: fixed;
+    inset: 0;
+    /* background-color: rgba(0, 0, 0, 0.7); */
+    z-index: 100;
+
+    /*　内容を上下中央に配置 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+}
+
+/* 内容を入れるボックス */
+.modal-container {
+    width: 90%;
+    max-width: 400px;
+    max-height: 80vh;
+    background: url("../image/background_text.webp") #C0AB72;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.6);
+}
+
+.modal-container .modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 4px 0 8px;
+}
+
+.gray-button{
+    display: inline-block;
+    align-self: center;
+    padding: 2px;
+    background-color: #000000;
+    color: #fff;
+    font-family: "WDXL Lubrifont JP N", sans-serif;
+    font-size: 1.2rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    margin-top: 16px;
+}
+
+.gray-button div {
+    display: block;
+    padding: 8px 32px 6px;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.2),
+        rgba(168, 168, 168, 0.2)
+    );
+    border-radius: 9999px;
+}
+
+/* ----------共通モーダルの設定　ここまで------------- */
+
+
+
+/* ----------モーダル　スタートの設定 ここから------------- */
+
+.modal-container .modal-content h1 {
+    font-family: "WDXL Lubrifont JP N", sans-serif;
+    font-size: 2rem;
+}
+
+.modal-container .modal-content .start-text {
+    line-height: 1.5;
+}
+
+.modal-container .modal-content img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.modal-container .modal-content .start-button {
+    display: inline-block;
+    align-self: center;
+    padding: 2px;
+    background-color: #A90000;
+    color: #fff;
+    font-family: "WDXL Lubrifont JP N", sans-serif;
+    font-size: 1.2rem;
+    border-radius: 9999px;
+    cursor: pointer;
+}
+
+.modal-container .modal-content .start-button div {
+    display: block;
+    padding: 8px 32px 6px;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.2),
+        rgba(164, 0, 0, 0.2)
+    );
+    border-radius: 9999px;
+}
+
+/* ----------モーダル　スタートの設定 ここまで------------- */
+
+
+
+
+
+/* ----------モーダル　じゃんけんの設定 ここから------------- */
+
+.modal-container .modal-content h2{
+    font-family: "WDXL Lubrifont JP N", sans-serif;
+    font-size: 2rem;
+}
+
+.modal-container .modal-content .myhands {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding: 16px 8px;
+}
+
+/* ----------モーダル　じゃんけんの設定 ここまで------------- */
+
+
+
+
+
+/* ----------モーダル　じゃんけん結果 ここから------------- */
+
+.modal-container .modal-content .battle-result {
+    display: flex;
+    gap: 16px;
+    padding: 16px 8px;
+}
+
+.modal-container .modal-content .battle-result .janken_box {
+    display: flex;
+    flex-direction: column;
+    padding: 0 8px;
+}
+
+.modal-container .modal-content .battle-result .janken_box p {
+    font-family: "WDXL Lubrifont JP N", sans-serif;
+    font-size: 1.25rem;
+    text-align: center;
+}
+
+.modal-container .modal-content .battle-result .janken_box #janken_computer,
+.modal-container .modal-content .battle-result .janken_box #janken_player {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding: 8px;
+}
+
+.modal-container .modal-content #janken_result {
+    background-color: #DFCC9A;
+    border : 1px solid #AA914F;
+    width: 100%;
+    padding: 16px 8px;
+    font-family: "WDXL Lubrifont JP N", sans-serif;
+    font-size: 1.5rem;
+    text-align: center;
+    border-radius: 8px;
+}
+
+/* ----------モーダル　じゃんけん結果 ここまで------------- */
+
+
+
+
+
+/* ----------モーダル　最終結果 ここから------------- */
+
+.modal-container .modal-content h2 {
+    margin-bottom: 16px;
+}
+
+.modal-container .modal-content .final_text {
+    margin-top: 16px;
+}
+
+/* ----------モーダル　最終結果 ここまで------------- */
+
+
+/*　メインエリアのcss */
+
+main {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    background: url("../image/background_image.webp") no-repeat center / 100% auto;
+}
+
+main .score {
+    background-color: #343434;
+    padding: 10px 20px;
+    display:flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    font-family: "WDXL Lubrifont JP N", sans-serif;
+    flex-shrink: 0;
+    z-index: 10;
+}
+
+main .score .match-count {
+    color: #222;
+    font-size: 1.5rem;
+    padding: 16px 20px;
+    background-color: #FFEE00;
+    border-radius: 8px;
+}
+
+main .score .computer-count,
+main .score .player-count {
+    color: #fff;
+    font-size: 1.5rem;
+}
+
+main .score .computer-count p,
+main .score .player-count p {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+main .score .computer-count span,
+main .score .player-count span {
+    font-size: 3rem;
+}
+
+#car {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#car img {
+    width: 80px;
+    height: auto;
+    transition: transform 0.4s;
+}
