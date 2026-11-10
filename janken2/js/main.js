@@ -1,37 +1,104 @@
-$(".card-back").hide(); // カードの裏面を非表示にする
-
+// ===== カードの絵柄・状態の定義 =====
+const cards = ["🐣", "🐣", "🐱", "🐱", "🐶", "🐶"];
 
 const Trumps_suits = ["spade", "heart", "diamond", "club"]; // トランプの記号を配列で定義
 const Trumps_numbers = ["joker", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]; // トランプの数字を配列で定義
-const randomNumber = Math.floor(Math.random() * 14); // 0から12までのどれかが表示される
+const randomNumber = Math.floor(Math.random() * 14); // 0から13までのどれかが表示される
 
-const duplicate = 2;
+// const duplicate = 6;
 const cardIds = [];
+let firstCard = null;   // まだ1枚もめくっていない状態
+let secondCard = null;  // まだ2枚目のカードをめくっていない状態
+let isChecking = false; // 判定中かどうか（true / false）
 
-for ( let i = 1 ; i <=duplicate; i++) { // duplicateの数だけ繰り返す
-    const randomNumber = Math.floor(Math.random() * 14); // 0から12までのどれかが表示される
-    const card_number = Trumps_numbers[randomNumber]; // ランダムでカードの数字を決定
-    const card_style = $("<div>").addClass("card").addClass("close-card").append( // カードの要素を作成しcardクラスとclose-cardクラスを追加
-        $("<div>").addClass("card-front").append( // カードの表面の要素を作成しcard-frontクラスを追加
-            $("<img>").attr("src", `image/${card_number}.png`).attr("alt", card_number) // カードの表面の画像を設定
-        ),
-        $("<div>").addClass("card-back").append( // カードの裏面の要素を作成しcard-backクラスを追加
-            $("<img>").attr("src", "image/card_back.png").attr("alt", "card_back") // カードの裏面の画像を設定
-        )
-    );
-    $(".vertical").append(card_style); // verticalクラスの要素にカードの要素を追加し、14枚表示する
+
+// ===== シャッフル =====
+function shuffleArray(array) { // 配列をシャッフルする関数
+    for (let i = array.length - 1; i > 0; i--) { // 配列の最後の要素から最初の要素までループする
+        const j = Math.floor(Math.random() * (i + 1)); // 0からiまでのランダムな整数を生成する
+        [array[i], array[j]] = [array[j], array[i]]; // 要素を入れ替え
+    }
+    return array; // シャッフルされた配列を返す
 }
 
+shuffleArray(cards); // 配列をシャッフルする関数を呼び出す
+
+
+// ===== カードの生成 =====
+for (let i = 0; i < cards.length; i++) { // cardsの数だけ繰り返す
+    const card_style = $("<div>").addClass("card").addClass("close-card").append( // カードの要素を作成しcardクラスとclose-cardクラスを追加
+        $("<div>").addClass("card-front"), // 最初に見える側（カードの裏柄）の要素を作成しcard-frontクラスを追加
+        $("<div>").addClass("card-back").text(cards[i]) // めくると現れる側（絵柄）の要素を作成しcard-backクラスを追加し、絵柄を設定する
+    );
+    $(".vertical").append(card_style);
+}
+
+//$(".card-front").hide(); // カードの表面を非表示にする
+
+
+// for ( let i = 1 ; i <=duplicate; i++) { // duplicateの数だけ繰り返す
+//     const randomNumber = Math.floor(Math.random() * 14); // 0から13までのどれかが表示される
+//     const card_number = Trumps_numbers[randomNumber]; // ランダムでカードの数字を決定
+//     const card_style = $("<div>").addClass("card").addClass("close-card").append( // カードの要素を作成しcardクラスとclose-cardクラスを追加
+//         $("<div>").addClass("card-front").append( // カードの表面の要素を作成しcard-frontクラスを追加
+//             $("<img>").attr("src", `image/${card_number}.png`).attr("alt", card_number) // カードの表面の画像を設定
+//         ),
+//         $("<div>").addClass("card-back").append( // カードの裏面の要素を作成しcard-backクラスを追加
+//             $("<img>").attr("src", "image/card_back.png").attr("alt", "card_back") // カードの裏面の画像を設定
+//         )
+//     );
+//     $(".vertical").append(card_style); // verticalクラスの要素にカードの要素を追加する
+// }
+
+
+// ===== カードをクリックしたときの処理 =====
 $(".card").on("click", function () {
-  if ($(this).hasClass("close-card")) { // .cardがclose-cardクラスの場合
-    $(this).addClass("open-card").removeClass("close-card"); //clickされたカードにopen-cardクラスを追加し、close-cardクラスを削除する
-    $(this).find(".card-front").addClass("flipped-close").removeClass("flipped-open");　//クリックされたカードの子要素である.card-frontにflipped-closeクラスを追加し、flipped-openクラスを削除する
-    $(this).find(".card-back").show().addClass("flipped-open").removeClass("flipped-close"); //クリックされたカードの子要素である.card-backを表示し、flipped-openクラスを追加し、flipped-closeクラスを削除する
-   } else if ($(this).hasClass("open-card")) { // .cardがopen-cardクラスの場合
-    $(this).addClass("close-card").removeClass("open-card"); //clickされたカードにclose-cardクラスを追加し、open-cardクラスを削除する
-     $(this).find(".card-back").addClass("flipped-close").removeClass("flipped-open"); //クリックされたカードの子要素である.card-backにflipped-closeクラスを追加し、flipped-openクラスを削除する
-     $(this).find(".card-front").show().addClass("flipped-open").removeClass("flipped-close"); //クリックされたカードの子要素である.card-frontを表示し、flipped-openクラスを追加し、flipped-closeクラスを削除する
-  } else {
-    alert("エラーです!!");
-  }
+
+    // --- クリックを無視する条件 ---
+    if ($(this).hasClass("open-card") || $(this).hasClass("match-card") || isChecking === true) {
+        // .cardがopen-cardクラスまたはmatch-cardクラスの場合、または判定中の場合
+        console.log("クリックできません");
+        return;
+    }
+
+    // --- 1枚目 / 2枚目をめくる ---
+    if (firstCard === null) { // まだ1枚もめくっていない場合（これが1枚目）
+        // if ($(this).hasClass("close-card")) { // .cardがclose-cardクラスの場合
+        firstCard = $(this).find(".card-back").text();
+        console.log(firstCard);
+        $(this).addClass("open-card").removeClass("close-card"); //clickされたカードにopen-cardクラスを追加し、close-cardクラスを削除する
+        $(this).find(".card-front").addClass("flipped-close").removeClass("flipped-open"); //クリックされたカードの子要素である.card-frontにflipped-closeクラスを追加し、flipped-openクラスを削除する
+        $(this).find(".card-back").addClass("flipped-open").removeClass("flipped-close"); //クリックされたカードの子要素である.card-backにflipped-openクラスを追加してめくり、flipped-closeクラスを削除する
+    } else { // 1枚目がすでにめくってある場合（これが2枚目）
+        secondCard = $(this).find(".card-back").text();
+        console.log(secondCard);
+        // $(this).addClass("close-card").removeClass("open-card"); //clickされたカードにclose-cardクラスを追加し、open-cardクラスを削除する
+        //  $(this).find(".card-back").addClass("flipped-close").removeClass("flipped-open"); //クリックされたカードの子要素である.card-backにflipped-closeクラスを追加し、flipped-openクラスを削除する
+        //  $(this).find(".card-front").addClass("flipped-open").removeClass("flipped-close"); //クリックされたカードの子要素である.card-frontにflipped-openクラスを追加して戻し、flipped-closeクラスを削除する
+        $(this).addClass("open-card").removeClass("close-card"); //clickされたカードにopen-cardクラスを追加し、close-cardクラスを削除する
+        $(this).find(".card-front").addClass("flipped-close").removeClass("flipped-open"); //クリックされたカードの子要素である.card-frontにflipped-closeクラスを追加し、flipped-openクラスを削除する
+        $(this).find(".card-back").addClass("flipped-open").removeClass("flipped-close"); //クリックされたカードの子要素である.card-backにflipped-openクラスを追加してめくり、flipped-closeクラスを削除する
+    }
+
+    // --- 2枚そろったらペア判定 ---
+    if (firstCard !== null && secondCard !== null) {
+        if (firstCard === secondCard) {
+            console.log("一致");
+            $(".open-card").addClass("match-card").removeClass("open-card"); // open-cardクラスの要素にmatch-cardクラスを追加し、open-cardクラスを削除する
+            firstCard = null; // firstCardをnullにする
+            secondCard = null; // secondCardをnullにする
+        } else {
+            isChecking = true; // 判定中にする
+            console.log("不一致");
+            setTimeout(function () { // 1秒後に実行する
+                $(".open-card").find(".card-front").addClass("flipped-open").removeClass("flipped-close"); // open-cardの中の.card-front（裏柄）にflipped-openクラスを追加し、flipped-closeクラスを削除する
+                $(".open-card").find(".card-back").addClass("flipped-close").removeClass("flipped-open"); // open-cardの中の.card-back（絵柄）にflipped-closeクラスを追加し、flipped-openクラスを削除する
+                $(".open-card").addClass("close-card").removeClass("open-card"); // open-cardクラスの要素にclose-cardクラスを追加し、open-cardクラスを削除する
+                isChecking = false; // 判定中を解除する
+                firstCard = null; // firstCardをnullにする
+                secondCard = null; // secondCardをnullにする
+            }, 1000); // 1000ミリ秒（1秒）後に実行する
+        }
+    }
+
 });
