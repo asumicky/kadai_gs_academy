@@ -1,5 +1,5 @@
-// ===== カードの絵柄・状態の定義 =====
-const cards = ["🐣", "🐣", "🐱", "🐱", "🐶", "🐶"];
+// ===== カードの絵柄・状態・HPの定義 =====
+const cards = ["⚔️", "⚔️", "🏹", "🏹", "🪄", "🪄"];
 
 const Trumps_suits = ["spade", "heart", "diamond", "club"]; // トランプの記号を配列で定義
 const Trumps_numbers = ["joker", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]; // トランプの数字を配列で定義
@@ -10,6 +10,11 @@ const cardIds = [];
 let firstCard = null;   // まだ1枚もめくっていない状態
 let secondCard = null;  // まだ2枚目のカードをめくっていない状態
 let isChecking = false; // 判定中かどうか（true / false）
+let isGameOver = false; // ゲームオーバーかどうか（true / false）
+const damage = { "⚔️": 30, "🏹": 20, "🪄": 50 }; // 武器ごとのダメージの定義（揃えたときに敵へ与えるダメージ）
+const enemyAttack = 10; // 不一致のときにプレイヤーが受けるダメージ（固定） 
+let enemyHP = 100; // 敵のHP
+let playerHP = 100; // プレイヤーのHP
 
 
 // ===== シャッフル =====
@@ -55,8 +60,8 @@ for (let i = 0; i < cards.length; i++) { // cardsの数だけ繰り返す
 $(".card").on("click", function () {
 
     // --- クリックを無視する条件 ---
-    if ($(this).hasClass("open-card") || $(this).hasClass("match-card") || isChecking === true) {
-        // .cardがopen-cardクラスまたはmatch-cardクラスの場合、または判定中の場合
+    if ($(this).hasClass("open-card") || $(this).hasClass("match-card") || isChecking === true || isGameOver === true) {
+        // .cardがopen-cardクラスまたはmatch-cardクラスの場合、または判定中・ゲームオーバーの場合
         console.log("クリックできません");
         return;
     }
@@ -84,12 +89,25 @@ $(".card").on("click", function () {
     if (firstCard !== null && secondCard !== null) {
         if (firstCard === secondCard) {
             console.log("一致");
+            console.log(damage[firstCard]);
+            enemyHP -= damage[firstCard]; // 揃えた武器のダメージ分、敵のHPを減らす
+            $(".enemy-bar-inner").css("width", enemyHP + "%"); // 敵のHPバーの幅を、残りHPの割合（%）にする
             $(".open-card").addClass("match-card").removeClass("open-card"); // open-cardクラスの要素にmatch-cardクラスを追加し、open-cardクラスを削除する
             firstCard = null; // firstCardをnullにする
             secondCard = null; // secondCardをnullにする
+            if($(".match-card").length === cards.length) { // match-cardの数がカードの総数と同じなら、全ペアが揃った
+                $(".clear-box").css("display", "flex"); // クリアの箱を表示する
+            }
         } else {
             isChecking = true; // 判定中にする
             console.log("不一致");
+            console.log(enemyAttack);
+            playerHP -= enemyAttack; // 不一致なので、プレイヤーのHPを固定ダメージ分減らす
+            if (playerHP <= 0) { // HPが0以下ならゲームオーバー
+                $(".gameover-box").css("display", "flex"); // ゲームオーバーの箱を表示する
+                isGameOver = true; // ゲームオーバーにする
+            }
+            $(".player-bar-inner").css("width", playerHP + "%"); // プレイヤーのHPバーの幅を、残りHPの割合（%）にする
             setTimeout(function () { // 1秒後に実行する
                 $(".open-card").find(".card-front").addClass("flipped-open").removeClass("flipped-close"); // open-cardの中の.card-front（裏柄）にflipped-openクラスを追加し、flipped-closeクラスを削除する
                 $(".open-card").find(".card-back").addClass("flipped-close").removeClass("flipped-open"); // open-cardの中の.card-back（絵柄）にflipped-closeクラスを追加し、flipped-openクラスを削除する
