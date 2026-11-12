@@ -1,8 +1,10 @@
 // ===== カードの絵柄・状態・HPの定義 =====
-const cards = ["⚔️", "⚔️", "🏹", "🏹", "🪄", "🪄"];
+const weapons = ["🗡️", "🤛", "🔫", "🪃", "🪄", "🪓", "🏹", "⚔️", "💣", "🧨"];
+const specials = ["💊", "💊", "🌀", "🛡️", "⭐️", "👯‍♀️" ];
+const cards = [...weapons, ...weapons, ...specials, ...specials];
 
-const Trumps_suits = ["spade", "heart", "diamond", "club"]; // トランプの記号を配列で定義
-const Trumps_numbers = ["joker", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]; // トランプの数字を配列で定義
+//const Trumps_suits = ["spade", "heart", "diamond", "club"]; // トランプの記号を配列で定義
+//const Trumps_numbers = ["joker", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]; // トランプの数字を配列で定義
 const randomNumber = Math.floor(Math.random() * 14); // 0から13までのどれかが表示される
 
 // const duplicate = 6;
@@ -11,8 +13,10 @@ let firstCard = null;   // まだ1枚もめくっていない状態
 let secondCard = null;  // まだ2枚目のカードをめくっていない状態
 let isChecking = false; // 判定中かどうか（true / false）
 let isGameOver = false; // ゲームオーバーかどうか（true / false）
-const damage = { "⚔️": 30, "🏹": 20, "🪄": 50 }; // 武器ごとのダメージの定義（揃えたときに敵へ与えるダメージ）
-const enemyAttack = 10; // 不一致のときにプレイヤーが受けるダメージ（固定） 
+let hasShield = false;
+let starTurns = 0;
+const damage = { "🗡️": 8, "🤛": 8, "🔫": 8, "🪃":8, "🪄":12, "🪓":12, "🏹":12, "⚔️":15, "💣":15, "🧨":15}; // 武器ごとのダメージの定義（揃えたときに敵へ与えるダメージ）
+const enemyAttack = 5; // 不一致のときにプレイヤーが受けるダメージ（固定） 
 let enemyHP = 100; // 敵のHP
 let playerHP = 100; // プレイヤーのHP
 
@@ -89,20 +93,56 @@ $(".card").on("click", function () {
     if (firstCard !== null && secondCard !== null) {
         if (firstCard === secondCard) {
             console.log("一致");
-            console.log(damage[firstCard]);
-            enemyHP -= damage[firstCard]; // 揃えた武器のダメージ分、敵のHPを減らす
-            $(".enemy-bar-inner").css("width", enemyHP + "%"); // 敵のHPバーの幅を、残りHPの割合（%）にする
+            if (weapons.includes(firstCard)) {// firstCard が武器のとき
+                console.log(damage[firstCard]);
+                enemyHP -= damage[firstCard]; // 揃えた武器のダメージ分、敵のHPを減らす
+                enemyHP = Math.max(0, enemyHP);
+                $(".enemy-bar-inner").css("width", enemyHP + "%"); // 敵のHPバーの幅を、残りHPの割合（%）にする        
+            } else if (firstCard === "💊") { // 💊 のとき
+                playerHP += 10 ;
+                playerHP = Math.min(100, playerHP);
+                $(".player-bar-inner").css("width", playerHP + "%");
+            } else if (firstCard === "🛡️") { // 🛡️ のとき
+                hasShield = true;
+            } else if (firstCard === "⭐️") {
+                starTurns = 3;
+            } else if (firstCard === "👯‍♀️") {      // ← 足す
+                const temp = enemyHP;               // 敵のHPを、一時的に預ける
+                enemyHP = playerHP;                 // 敵のHP ← プレイヤーのHP
+                playerHP = temp;                    // プレイヤーのHP ← 預けておいた敵のHP
+                $(".enemy-bar-inner").css("width", enemyHP + "%");
+                $(".player-bar-inner").css("width", playerHP + "%");
+            }
             $(".open-card").addClass("match-card").removeClass("open-card"); // open-cardクラスの要素にmatch-cardクラスを追加し、open-cardクラスを削除する
+            if (firstCard === "🌀") {
+                const closeTexts = [];   // 空の箱を、先に用意する
+                $(".close-card .card-back").each(function () {
+                    closeTexts.push($(this).text());
+                });
+                shuffleArray(closeTexts);
+                for (let i = 0; i < closeTexts.length; i++) {
+                    $(".close-card .card-back").eq(i).text(closeTexts[i]);
+                }
+                console.log(closeTexts);
+            }
             firstCard = null; // firstCardをnullにする
             secondCard = null; // secondCardをnullにする
-            if($(".match-card").length === cards.length) { // match-cardの数がカードの総数と同じなら、全ペアが揃った
+            if(enemyHP <= 0) { 
                 $(".clear-box").css("display", "flex"); // クリアの箱を表示する
+                isGameOver = true;
             }
         } else {
             isChecking = true; // 判定中にする
             console.log("不一致");
             console.log(enemyAttack);
-            playerHP -= enemyAttack; // 不一致なので、プレイヤーのHPを固定ダメージ分減らす
+            if (starTurns > 0) {
+               starTurns -= 1;          // ⭐️ の残り回数を1減らす（ダメージなし）
+            } else if (hasShield === true) {
+                hasShield = false;       // バリアを使い切る
+            } else {
+                playerHP -= enemyAttack;
+                playerHP = Math.max(0, playerHP);
+            }
             if (playerHP <= 0) { // HPが0以下ならゲームオーバー
                 $(".gameover-box").css("display", "flex"); // ゲームオーバーの箱を表示する
                 isGameOver = true; // ゲームオーバーにする
@@ -119,4 +159,31 @@ $(".card").on("click", function () {
         }
     }
 
+});
+
+
+//*---------------「もう一回遊ぶ」ボタンを押した時--------------------*
+$(".restart-button").on("click", function (){
+    firstCard = null;   // まだ1枚もめくっていない状態
+    secondCard = null;  // まだ2枚目のカードをめくっていない状態
+    isChecking = true; // 判定中かどうか（true / false）
+    isGameOver = false; // ゲームオーバーかどうか（true / false）
+    hasShield = false;
+    starTurns = 0;
+    enemyHP = 100; // 敵のHP
+    playerHP = 100; // プレイヤーのHP
+    $(".enemy-bar-inner").css("width", enemyHP + "%"); // 敵のHPバーの幅を、残りHPの割合（%）にする
+    $(".player-bar-inner").css("width", playerHP + "%"); // プレイヤーのHPバーの幅を、残りHPの割合（%）にする
+    $(".clear-box").css("display", "none");
+    $(".gameover-box").css("display", "none");
+    $(".card").removeClass("open-card").removeClass("match-card").addClass("close-card");
+    $(".card").find(".card-front").addClass("flipped-open").removeClass("flipped-close");
+    $(".card").find(".card-back").addClass("flipped-close").removeClass("flipped-open");
+    setTimeout(function () { 
+    shuffleArray(cards); // 配列をシャッフルする関数を呼び出す
+        for (let i = 0; i < cards.length; i++) {
+            $(".card-back").eq(i).text(cards[i]);
+        }
+        isChecking = false;
+     }, 1000);
 });
