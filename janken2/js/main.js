@@ -27,9 +27,18 @@ const damage = {
   "💣": 15,
   "🧨": 15,
 }; // 武器ごとのダメージの定義（揃えたときに敵へ与えるダメージ）
+
 const enemyAttack = 5; // 不一致のときにプレイヤーが受けるダメージ（固定）
 let enemyHP = 100; // 敵のHP
 let playerHP = 100; // プレイヤーのHP
+let stats;
+
+// ========= 挑戦回数・勝率の統計 ============
+if (localStorage.getItem("stats")) { 
+    stats = JSON.parse(localStorage.getItem("stats"));
+} else { 
+    stats = { totalGames: 0, clearGames: 0 }
+}
 
 // ===== シャッフル =====
 function shuffleArray(array) {
