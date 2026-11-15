@@ -28,7 +28,7 @@ const damage = {
   "🧨": 15,
 }; // 武器ごとのダメージの定義（揃えたときに敵へ与えるダメージ）
 
-const enemyAttack = 5; // 不一致のときにプレイヤーが受けるダメージ（固定）
+let enemyAttack = 5; // 不一致のときにプレイヤーが受けるダメージ
 let enemyHP = 100; // 敵のHP
 let playerHP = 100; // プレイヤーのHP
 let stats;
