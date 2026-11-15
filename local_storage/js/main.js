@@ -29,9 +29,12 @@ const damage = {
 }; // 武器ごとのダメージの定義（揃えたときに敵へ与えるダメージ）
 
 let enemyAttack = 5; // 不一致のときにプレイヤーが受けるダメージ
+let enemyFullHP;
 let enemyHP = 100; // 敵のHP
 let playerHP = 100; // プレイヤーのHP
 let stats;
+let stage;
+
 
 // ========= 挑戦回数・勝率の統計 ============
 if (localStorage.getItem("stats")) { 
@@ -55,6 +58,20 @@ if (localStorage.getItem("stats")) {
     localStorage.setItem("stats", jsonData); //ステップ2：localStorageに上記の文字列を保存
     console.log(stats);
 }
+
+// --------- ステージ数の取得 ------------ //
+if (localStorage.getItem("stage")) {
+    stage = Number(localStorage.getItem("stage"));
+    console.log(stage);
+} else {
+    stage = 1;
+}
+enemyAttack = 5 + (stage-1) * 2
+enemyFullHP = 100 + (stage-1) * 20
+enemyHP = enemyFullHP;
+
+
+
 
 // ===== シャッフル =====
 function shuffleArray(array) {
@@ -151,8 +168,10 @@ $(".card").on("click", function () {
         // firstCard が武器のとき
         console.log(damage[firstCard]);
         enemyHP -= damage[firstCard]; // 揃えた武器のダメージ分、敵のHPを減らす
-        enemyHP = Math.max(0, enemyHP);
-        $(".enemy-bar-inner").css("width", enemyHP + "%"); // 敵のHPバーの幅を、残りHPの割合（%）にする
+        enemyHP = Math.max(0, enemyHP); // HPがマイナスにならないように、0より小さくなったら0にする
+        $(".enemy-bar-inner").css("width", (enemyHP / enemyFullHP * 100) + "%"); 
+        // 敵のHPバーの幅を、残りHPの割合（%）にする
+        // 敵のHPバーはステージによって変化するのでenemyFullHPを使用する
       } else if (firstCard === "💊") {
         // 💊 のとき
         playerHP += 10;
@@ -168,7 +187,9 @@ $(".card").on("click", function () {
         const temp = enemyHP; // 敵のHPを、一時的に預ける
         enemyHP = playerHP; // 敵のHP ← プレイヤーのHP
         playerHP = temp; // プレイヤーのHP ← 預けておいた敵のHP
-        $(".enemy-bar-inner").css("width", enemyHP + "%");
+        $(".enemy-bar-inner").css("width", (enemyHP / enemyFullHP * 100) + "%");
+        // 敵のHPバーの幅を、残りHPの割合（%）にする
+        // 敵のHPバーはステージによって変化するのでenemyFullHPを使用する
         $(".player-bar-inner").css("width", playerHP + "%");
       }
       $(".open-card").addClass("match-card").removeClass("open-card"); // open-cardクラスの要素にmatch-cardクラスを追加し、open-cardクラスを削除する
@@ -186,7 +207,7 @@ $(".card").on("click", function () {
       firstCard = null; // firstCardをnullにする
       secondCard = null; // secondCardをnullにする
       
-      if (enemyHP <= 0) { // もし敵のHPが0以下になったら
+      if (enemyHP <= 0) { // もし敵のHPが0以下になったら（クリアしたら）
         
         stats.clearGames++;
         const jsonData = JSON.stringify(stats);
@@ -213,6 +234,7 @@ $(".card").on("click", function () {
         // 合計ゲーム回数を取得
         $("#clearGames").text(stats.clearGames);
         // 合計クリア回数を取得
+        localStorage.getItem("stage")
 
       }
 
@@ -277,7 +299,9 @@ $(".restart-button").on("click", function () {
         // ここでやりたいのは stats の最新の値を保存する処理なので setItem が正しい
         // getItem を使うのは保存した値を画面に表示したいときなどに取り出すとき
 
-  $(".enemy-bar-inner").css("width", enemyHP + "%"); // 敵のHPバーの幅を、残りHPの割合（%）にする
+  $(".enemy-bar-inner").css("width", (enemyHP / enemyFullHP * 100) + "%"); 
+  // 敵のHPバーの幅を、残りHPの割合（%）にする
+  // 敵のHPバーはステージによって変化するのでenemyFullHPを使用する
   $(".player-bar-inner").css("width", playerHP + "%"); // プレイヤーのHPバーの幅を、残りHPの割合（%）にする
   $(".clear-box").css("display", "none");
   $(".gameover-box").css("display", "none");
