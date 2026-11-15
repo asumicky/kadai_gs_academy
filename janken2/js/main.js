@@ -35,9 +35,25 @@ let stats;
 
 // ========= 挑戦回数・勝率の統計 ============
 if (localStorage.getItem("stats")) { 
-    stats = JSON.parse(localStorage.getItem("stats"));
+    stats = JSON.parse(localStorage.getItem("stats")); 
+    // localStorageから stats を取り出して、オブジェクトに戻して、stats 変数に入れる
+    
+    // localStorageには文字列しか保存できない。
+    // でも stats はオブジェクト
+    // オブジェクト → JSON文字列に変換が必要
+    // オブジェクトをlocalStorageに保存する
+    stats.totalGames++ //stats オブジェクトの totalGames の値を1増やす。最初のゲームも totalGames に含めるためこの処理が必要。
+    const jsonData = JSON.stringify(stats); //ステップ1 オブジェクト → JSON文字列に変換
+        // jsonData の中身は '{"totalGames":3,"clearGames":1}' というような文字列になる
+    localStorage.setItem("stats", jsonData); //ステップ2：localStorageに上記の文字列を保存
+    console.log(stats);
 } else { 
     stats = { totalGames: 0, clearGames: 0 }
+    stats.totalGames++ //stats オブジェクトの totalGames の値を1増やす。最初のゲームも totalGames に含めるためこの処理が必要。
+    const jsonData = JSON.stringify(stats); //ステップ1 オブジェクト → JSON文字列に変換
+        // jsonData の中身は '{"totalGames":3,"clearGames":1}' というような文字列になる
+    localStorage.setItem("stats", jsonData); //ステップ2：localStorageに上記の文字列を保存
+    console.log(stats);
 }
 
 // ===== シャッフル =====
@@ -169,14 +185,37 @@ $(".card").on("click", function () {
       }
       firstCard = null; // firstCardをnullにする
       secondCard = null; // secondCardをnullにする
-      if (enemyHP <= 0) {
+      
+      if (enemyHP <= 0) { // もし敵のHPが0以下になったら
+        
+        stats.clearGames++;
+        const jsonData = JSON.stringify(stats);
+        localStorage.setItem("stats", jsonData);
+        
         $(".clear-box").css("display", "flex"); // クリアの箱を表示する
         isGameOver = true;
         if (playerHP > Number(localStorage.getItem("highScore"))) {
           localStorage.setItem("highScore", playerHP);
         }
-        $("#highScore").text(localStorage.getItem("highScore"));
+        
+        $("#highScore").text(localStorage.getItem("highScore")); 
+        // localStorageからhighScoreを取得し、#highScoreにテキストで表示
+        // highScoreはlocalStorageに数値をそのまま保存しているのでlocalStorage.getItem()で取り出す
+        
+        $("#winRate").text(Math.floor(stats.clearGames / stats.totalGames * 100)); 
+        // localStorageからstats.clearGames（クリア回数）とstats.totalGames（ゲーム回数） を取得し100で割る
+        // 例えば10回プレイして、3回クリアした場合：3 ÷ 10 × 100 = 30（%）
+        // totalGames / clearGamesは stats というオブジェクトの中に保存している
+        // ので、JS上の stats 変数がすでに最新の値を持っている
+        // それをstats.キー名で取り出すだけで良い
+        
+        $("#totalGames").text(stats.totalGames);
+        // 合計ゲーム回数を取得
+        $("#clearGames").text(stats.clearGames);
+        // 合計クリア回数を取得
+
       }
+
     } else {
       isChecking = true; // 判定中にする
       console.log("不一致");
@@ -216,14 +255,28 @@ $(".card").on("click", function () {
 
 //*---------------「もう一回遊ぶ」ボタンを押した時--------------------*
 $(".restart-button").on("click", function () {
+  
   firstCard = null; // まだ1枚もめくっていない状態
   secondCard = null; // まだ2枚目のカードをめくっていない状態
   isChecking = true; // 判定中かどうか（true / false）
   isGameOver = false; // ゲームオーバーかどうか（true / false）
-  hasShield = false;
-  starTurns = 0;
+  hasShield = false; // シールドカードを揃えているかどうか（true / false）
+  starTurns = 0; // スターカードを揃えているかどうか（true / false）
   enemyHP = 100; // 敵のHP
   playerHP = 100; // プレイヤーのHP
+  
+  stats.totalGames++; //ゲーム回数を1回追加
+  const jsonData = JSON.stringify(stats); //オブジェクト→JSON
+  localStorage.setItem("stats", jsonData);//文字を取得してstatsに保存
+        // setItem と getItem は役割が逆
+        // setItem → localStorageに保存する（書き込み）
+        // getItem → localStorageから取り出す（読み込み）
+        // 英語で考えると：
+        // set = セットする・置く
+        // get = 取ってくる
+        // ここでやりたいのは stats の最新の値を保存する処理なので setItem が正しい
+        // getItem を使うのは保存した値を画面に表示したいときなどに取り出すとき
+
   $(".enemy-bar-inner").css("width", enemyHP + "%"); // 敵のHPバーの幅を、残りHPの割合（%）にする
   $(".player-bar-inner").css("width", playerHP + "%"); // プレイヤーのHPバーの幅を、残りHPの割合（%）にする
   $(".clear-box").css("display", "none");
