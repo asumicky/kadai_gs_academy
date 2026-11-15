@@ -12,6 +12,9 @@ main {
     align-items: center;
 }
 
+.stage-block {
+    color: #fff;
+}
 
 .vertical {
     width: 720px;
@@ -158,7 +161,8 @@ main {
 }
 
 
-.restart-button {
+.restart-button,
+.nextstage-button {
     width: 320px;
     min-height: 44px;
     text-align: center;

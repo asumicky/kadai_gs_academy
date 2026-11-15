@@ -33,7 +33,7 @@ let enemyFullHP;
 let enemyHP = 100; // 敵のHP
 let playerHP = 100; // プレイヤーのHP
 let stats;
-let stage;
+let stage = 1;
 
 
 // ========= 挑戦回数・勝率の統計 ============
@@ -69,6 +69,7 @@ if (localStorage.getItem("stage")) {
 enemyAttack = 5 + (stage-1) * 2
 enemyFullHP = 100 + (stage-1) * 20
 enemyHP = enemyFullHP;
+$(".stage").text(stage);
 
 
 
@@ -183,13 +184,13 @@ $(".card").on("click", function () {
       } else if (firstCard === "⭐️") {
         starTurns = 3;
       } else if (firstCard === "👯‍♀️") {
-        // ← 足す
         const temp = enemyHP; // 敵のHPを、一時的に預ける
         enemyHP = playerHP; // 敵のHP ← プレイヤーのHP
         playerHP = temp; // プレイヤーのHP ← 預けておいた敵のHP
         $(".enemy-bar-inner").css("width", (enemyHP / enemyFullHP * 100) + "%");
         // 敵のHPバーの幅を、残りHPの割合（%）にする
         // 敵のHPバーはステージによって変化するのでenemyFullHPを使用する
+        playerHP = Math.min(100, playerHP);
         $(".player-bar-inner").css("width", playerHP + "%");
       }
       $(".open-card").addClass("match-card").removeClass("open-card"); // open-cardクラスの要素にmatch-cardクラスを追加し、open-cardクラスを削除する
@@ -208,7 +209,10 @@ $(".card").on("click", function () {
       secondCard = null; // secondCardをnullにする
       
       if (enemyHP <= 0) { // もし敵のHPが0以下になったら（クリアしたら）
-        
+        stage += 1 ;
+        localStorage.setItem("stage", stage);
+        $(".stage").text(stage);
+
         stats.clearGames++;
         const jsonData = JSON.stringify(stats);
         localStorage.setItem("stats", jsonData);
@@ -234,7 +238,6 @@ $(".card").on("click", function () {
         // 合計ゲーム回数を取得
         $("#clearGames").text(stats.clearGames);
         // 合計クリア回数を取得
-        localStorage.getItem("stage")
 
       }
 
@@ -284,7 +287,7 @@ $(".restart-button").on("click", function () {
   isGameOver = false; // ゲームオーバーかどうか（true / false）
   hasShield = false; // シールドカードを揃えているかどうか（true / false）
   starTurns = 0; // スターカードを揃えているかどうか（true / false）
-  enemyHP = 100; // 敵のHP
+  enemyHP = enemyFullHP; // 敵のHP
   playerHP = 100; // プレイヤーのHP
   
   stats.totalGames++; //ゲーム回数を1回追加
@@ -300,6 +303,52 @@ $(".restart-button").on("click", function () {
         // getItem を使うのは保存した値を画面に表示したいときなどに取り出すとき
 
   $(".enemy-bar-inner").css("width", (enemyHP / enemyFullHP * 100) + "%"); 
+  // 敵のHPバーの幅を、残りHPの割合（%）にする
+  // 敵のHPバーはステージによって変化するのでenemyFullHPを使用する
+  $(".player-bar-inner").css("width", playerHP + "%"); // プレイヤーのHPバーの幅を、残りHPの割合（%）にする
+  $(".clear-box").css("display", "none");
+  $(".gameover-box").css("display", "none");
+  $(".card")
+    .removeClass("open-card")
+    .removeClass("match-card")
+    .addClass("close-card");
+  $(".card")
+    .find(".card-front")
+    .addClass("flipped-open")
+    .removeClass("flipped-close");
+  $(".card")
+    .find(".card-back")
+    .addClass("flipped-close")
+    .removeClass("flipped-open");
+  setTimeout(function () {
+    shuffleArray(cards); // 配列をシャッフルする関数を呼び出す
+    for (let i = 0; i < cards.length; i++) {
+      $(".card-back").eq(i).text(cards[i]);
+    }
+    isChecking = false;
+  }, 1000);
+});
+
+
+
+//*---------------「次のステージへ」ボタンを押した時--------------------*
+$(".nextstage-button").on("click", function () {
+    firstCard = null; // まだ1枚もめくっていない状態
+    secondCard = null; // まだ2枚目のカードをめくっていない状態
+    isChecking = true; // 判定中かどうか（true / false）
+    isGameOver = false; // ゲームオーバーかどうか（true / false）
+    hasShield = false; // シールドカードを揃えているかどうか（true / false）
+    starTurns = 0; // スターカードを揃えているかどうか（true / false）
+    enemyFullHP = 100 + (stage-1) * 20 ;   // ステージごとの敵のHPの計算式
+    enemyHP = enemyFullHP; // 敵のHP
+    enemyAttack = 5 + (stage-1) * 2 ; //ステージごとの攻撃力
+    playerHP = 100; // プレイヤーのHP
+
+    stats.totalGames++; //ゲーム回数を1回追加
+    const jsonData = JSON.stringify(stats); //オブジェクト→JSON
+    localStorage.setItem("stats", jsonData);//文字を取得してstatsに保存
+
+    $(".enemy-bar-inner").css("width", (enemyHP / enemyFullHP * 100) + "%"); 
   // 敵のHPバーの幅を、残りHPの割合（%）にする
   // 敵のHPバーはステージによって変化するのでenemyFullHPを使用する
   $(".player-bar-inner").css("width", playerHP + "%"); // プレイヤーのHPバーの幅を、残りHPの割合（%）にする
