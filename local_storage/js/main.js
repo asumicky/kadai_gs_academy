@@ -210,41 +210,46 @@ $(".card").on("click", function () {
       secondCard = null; // secondCardをnullにする
       
       if (enemyHP <= 0) { // もし敵のHPが0以下になったら（クリアしたら）
-        stage += 1 ;
-        localStorage.setItem("stage", stage);
-        $(".stage").text(stage);
 
         if (stage === maxStage) {
           // 最後のステージをクリアしたとき
-          
+          $(".all-clear-box").css("display", "flex"); // オールクリアの箱を表示する
+
         } else {
-        // まだ次のステージがあるとき
+          // まだ次のステージがあるとき
+          
+          stage += 1 ; //ステージ+1
+          localStorage.setItem("stage", stage); //ローカルストレージにステージ数を保存する
+          $(".stage").text(stage); //.stageにtextでローカルストレージのstage箱に保存してる値を入れる
+          
+          $(".clear-box").css("display", "flex"); // クリアの箱を表示する
+
         }
 
-        stats.clearGames++;
-        const jsonData = JSON.stringify(stats);
-        localStorage.setItem("stats", jsonData);
-        
-        $(".clear-box").css("display", "flex"); // クリアの箱を表示する
-        isGameOver = true;
+        stats.clearGames++; //クリアゲーム数＋1
+        const jsonData = JSON.stringify(stats); //ステップ1 オブジェクト → JSON文字列に変換
+        localStorage.setItem("stats", jsonData); //ステップ2 ローカルストレージにstatsを保存
+
         if (playerHP > Number(localStorage.getItem("highScore"))) {
           localStorage.setItem("highScore", playerHP);
         }
-        
-        $("#highScore").text(localStorage.getItem("highScore")); 
-        // localStorageからhighScoreを取得し、#highScoreにテキストで表示
+
+        isGameOver = true;
+
+        $(".highScore").text(localStorage.getItem("highScore")); 
+        // localStorageからhighScoreを取得し、.highScoreにテキストで表示
         // highScoreはlocalStorageに数値をそのまま保存しているのでlocalStorage.getItem()で取り出す
         
-        $("#winRate").text(Math.floor(stats.clearGames / stats.totalGames * 100)); 
+        $(".winRate").text(Math.floor(stats.clearGames / stats.totalGames * 100)); 
         // localStorageからstats.clearGames（クリア回数）とstats.totalGames（ゲーム回数） を取得し100で割る
         // 例えば10回プレイして、3回クリアした場合：3 ÷ 10 × 100 = 30（%）
         // totalGames / clearGamesは stats というオブジェクトの中に保存している
         // ので、JS上の stats 変数がすでに最新の値を持っている
         // それをstats.キー名で取り出すだけで良い
-        
-        $("#totalGames").text(stats.totalGames);
+
+        $(".totalGames").text(stats.totalGames);
         // 合計ゲーム回数を取得
-        $("#clearGames").text(stats.clearGames);
+        $(".clearGames").text(stats.clearGames);
         // 合計クリア回数を取得
 
       }
@@ -381,4 +386,56 @@ $(".nextstage-button").on("click", function () {
     }
     isChecking = false;
   }, 1000);
+});
+
+
+// * -------------------- newgame-buttonを押した時 ----------------------- * //
+$(".newgame-button").on("click", function () {
+  stage = 1;
+  firstCard = null; // まだ1枚もめくっていない状態
+  secondCard = null; // まだ2枚目のカードをめくっていない状態
+  isChecking = true; // 判定中かどうか（true / false）
+  isGameOver = false; // ゲームオーバーかどうか（true / false）
+  hasShield = false; // シールドカードを揃えているかどうか（true / false）
+  starTurns = 0; // スターカードを揃えているかどうか（true / false）
+  enemyFullHP = 100 + (stage-1) * 20 ;   // ステージごとの敵のHPの計算式
+  enemyHP = enemyFullHP; // 敵のHP
+  enemyAttack = 5 + (stage-1) * 2 ; //ステージごとの攻撃力
+  playerHP = 100; // プレイヤーのHP
+  
+  localStorage.setItem("stage", stage); //ローカルストレージにステージ数を保存する
+  $(".stage").text(stage); //.stageにtextでローカルストレージのstage箱に保存してる値を入れる
+
+  $(".all-clear-box").css("display", "none"); // オールクリアの箱を非表示にする
+
+  stats.totalGames++; //ゲーム回数を1回追加
+  const jsonData = JSON.stringify(stats); //オブジェクト→JSON
+  localStorage.setItem("stats", jsonData);//文字を取得してstatsに保存
+
+  $(".enemy-bar-inner").css("width", (enemyHP / enemyFullHP * 100) + "%"); 
+  // 敵のHPバーの幅を、残りHPの割合（%）にする
+  // 敵のHPバーはステージによって変化するのでenemyFullHPを使用する
+  $(".player-bar-inner").css("width", playerHP + "%"); // プレイヤーのHPバーの幅を、残りHPの割合（%）にする
+  $(".clear-box").css("display", "none");
+  $(".gameover-box").css("display", "none");
+  $(".card")
+    .removeClass("open-card")
+    .removeClass("match-card")
+    .addClass("close-card");
+  $(".card")
+    .find(".card-front")
+    .addClass("flipped-open")
+    .removeClass("flipped-close");
+  $(".card")
+    .find(".card-back")
+    .addClass("flipped-close")
+    .removeClass("flipped-open");
+  setTimeout(function () {
+    shuffleArray(cards); // 配列をシャッフルする関数を呼び出す
+    for (let i = 0; i < cards.length; i++) {
+      $(".card-back").eq(i).text(cards[i]);
+    }
+    isChecking = false;
+  }, 1000);
+
 });
