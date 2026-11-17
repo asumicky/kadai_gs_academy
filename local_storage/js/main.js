@@ -34,6 +34,7 @@ let enemyHP = 100; // 敵のHP
 let playerHP = 100; // プレイヤーのHP
 let stats;
 let stage = 1;
+const maxStage = 3;
 
 
 // ========= 挑戦回数・勝率の統計 ============
@@ -212,6 +213,13 @@ $(".card").on("click", function () {
         stage += 1 ;
         localStorage.setItem("stage", stage);
         $(".stage").text(stage);
+
+        if (stage === maxStage) {
+          // 最後のステージをクリアしたとき
+          
+        } else {
+        // まだ次のステージがあるとき
+        }
 
         stats.clearGames++;
         const jsonData = JSON.stringify(stats);
