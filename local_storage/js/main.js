@@ -37,6 +37,10 @@ let stage = 1;
 const maxStage = 3;
 
 
+
+
+
+
 // ========= 挑戦回数・勝率の統計 ============
 if (localStorage.getItem("stats")) { 
     stats = JSON.parse(localStorage.getItem("stats")); 
@@ -75,6 +79,8 @@ $(".stage").text(stage);
 
 
 
+
+
 // ===== シャッフル =====
 function shuffleArray(array) {
   // 配列をシャッフルする関数
@@ -86,7 +92,12 @@ function shuffleArray(array) {
   return array; // シャッフルされた配列を返す
 }
 
+
+
+
 shuffleArray(cards); // 配列をシャッフルする関数を呼び出す
+
+
 
 // ===== カードの生成 =====
 for (let i = 0; i < cards.length; i++) {
@@ -98,6 +109,11 @@ for (let i = 0; i < cards.length; i++) {
   );
   $(".vertical").append(card_style);
 }
+
+
+
+
+
 
 //$(".card-front").hide(); // カードの表面を非表示にする
 
@@ -115,6 +131,12 @@ for (let i = 0; i < cards.length; i++) {
 //     $(".vertical").append(card_style); // verticalクラスの要素にカードの要素を追加する
 // }
 
+
+
+
+
+
+
 // ===== カードをクリックしたときの処理 =====
 $(".card").on("click", function () {
   // --- クリックを無視する条件 ---
@@ -128,6 +150,10 @@ $(".card").on("click", function () {
     console.log("クリックできません");
     return;
   }
+
+
+
+
 
   // --- 1枚目 / 2枚目をめくる ---
   if (firstCard === null) {
@@ -291,61 +317,10 @@ $(".card").on("click", function () {
   }
 });
 
-//*---------------「もう一回遊ぶ」ボタンを押した時--------------------*
-$(".restart-button").on("click", function () {
+
+
+function resetGame() { 
   
-  firstCard = null; // まだ1枚もめくっていない状態
-  secondCard = null; // まだ2枚目のカードをめくっていない状態
-  isChecking = true; // 判定中かどうか（true / false）
-  isGameOver = false; // ゲームオーバーかどうか（true / false）
-  hasShield = false; // シールドカードを揃えているかどうか（true / false）
-  starTurns = 0; // スターカードを揃えているかどうか（true / false）
-  enemyHP = enemyFullHP; // 敵のHP
-  playerHP = 100; // プレイヤーのHP
-  
-  stats.totalGames++; //ゲーム回数を1回追加
-  const jsonData = JSON.stringify(stats); //オブジェクト→JSON
-  localStorage.setItem("stats", jsonData);//文字を取得してstatsに保存
-        // setItem と getItem は役割が逆
-        // setItem → localStorageに保存する（書き込み）
-        // getItem → localStorageから取り出す（読み込み）
-        // 英語で考えると：
-        // set = セットする・置く
-        // get = 取ってくる
-        // ここでやりたいのは stats の最新の値を保存する処理なので setItem が正しい
-        // getItem を使うのは保存した値を画面に表示したいときなどに取り出すとき
-
-  $(".enemy-bar-inner").css("width", (enemyHP / enemyFullHP * 100) + "%"); 
-  // 敵のHPバーの幅を、残りHPの割合（%）にする
-  // 敵のHPバーはステージによって変化するのでenemyFullHPを使用する
-  $(".player-bar-inner").css("width", playerHP + "%"); // プレイヤーのHPバーの幅を、残りHPの割合（%）にする
-  $(".clear-box").css("display", "none");
-  $(".gameover-box").css("display", "none");
-  $(".card")
-    .removeClass("open-card")
-    .removeClass("match-card")
-    .addClass("close-card");
-  $(".card")
-    .find(".card-front")
-    .addClass("flipped-open")
-    .removeClass("flipped-close");
-  $(".card")
-    .find(".card-back")
-    .addClass("flipped-close")
-    .removeClass("flipped-open");
-  setTimeout(function () {
-    shuffleArray(cards); // 配列をシャッフルする関数を呼び出す
-    for (let i = 0; i < cards.length; i++) {
-      $(".card-back").eq(i).text(cards[i]);
-    }
-    isChecking = false;
-  }, 1000);
-});
-
-
-
-//*---------------「次のステージへ」ボタンを押した時--------------------*
-$(".nextstage-button").on("click", function () {
     firstCard = null; // まだ1枚もめくっていない状態
     secondCard = null; // まだ2枚目のカードをめくっていない状態
     isChecking = true; // 判定中かどうか（true / false）
@@ -367,6 +342,7 @@ $(".nextstage-button").on("click", function () {
   $(".player-bar-inner").css("width", playerHP + "%"); // プレイヤーのHPバーの幅を、残りHPの割合（%）にする
   $(".clear-box").css("display", "none");
   $(".gameover-box").css("display", "none");
+  $(".all-clear-box").css("display", "none"); // オールクリアの箱を非表示にする
   $(".card")
     .removeClass("open-card")
     .removeClass("match-card")
@@ -386,56 +362,27 @@ $(".nextstage-button").on("click", function () {
     }
     isChecking = false;
   }, 1000);
+
+};
+
+
+//*---------------「もう一回遊ぶ」ボタンを押した時--------------------*
+$(".restart-button").on("click", function () {
+  resetGame();
+});
+
+
+
+//*---------------「次のステージへ」ボタンを押した時--------------------*
+$(".nextstage-button").on("click", function () {
+    resetGame();
 });
 
 
 // * -------------------- newgame-buttonを押した時 ----------------------- * //
 $(".newgame-button").on("click", function () {
   stage = 1;
-  firstCard = null; // まだ1枚もめくっていない状態
-  secondCard = null; // まだ2枚目のカードをめくっていない状態
-  isChecking = true; // 判定中かどうか（true / false）
-  isGameOver = false; // ゲームオーバーかどうか（true / false）
-  hasShield = false; // シールドカードを揃えているかどうか（true / false）
-  starTurns = 0; // スターカードを揃えているかどうか（true / false）
-  enemyFullHP = 100 + (stage-1) * 20 ;   // ステージごとの敵のHPの計算式
-  enemyHP = enemyFullHP; // 敵のHP
-  enemyAttack = 5 + (stage-1) * 2 ; //ステージごとの攻撃力
-  playerHP = 100; // プレイヤーのHP
-  
   localStorage.setItem("stage", stage); //ローカルストレージにステージ数を保存する
   $(".stage").text(stage); //.stageにtextでローカルストレージのstage箱に保存してる値を入れる
-
-  $(".all-clear-box").css("display", "none"); // オールクリアの箱を非表示にする
-
-  stats.totalGames++; //ゲーム回数を1回追加
-  const jsonData = JSON.stringify(stats); //オブジェクト→JSON
-  localStorage.setItem("stats", jsonData);//文字を取得してstatsに保存
-
-  $(".enemy-bar-inner").css("width", (enemyHP / enemyFullHP * 100) + "%"); 
-  // 敵のHPバーの幅を、残りHPの割合（%）にする
-  // 敵のHPバーはステージによって変化するのでenemyFullHPを使用する
-  $(".player-bar-inner").css("width", playerHP + "%"); // プレイヤーのHPバーの幅を、残りHPの割合（%）にする
-  $(".clear-box").css("display", "none");
-  $(".gameover-box").css("display", "none");
-  $(".card")
-    .removeClass("open-card")
-    .removeClass("match-card")
-    .addClass("close-card");
-  $(".card")
-    .find(".card-front")
-    .addClass("flipped-open")
-    .removeClass("flipped-close");
-  $(".card")
-    .find(".card-back")
-    .addClass("flipped-close")
-    .removeClass("flipped-open");
-  setTimeout(function () {
-    shuffleArray(cards); // 配列をシャッフルする関数を呼び出す
-    for (let i = 0; i < cards.length; i++) {
-      $(".card-back").eq(i).text(cards[i]);
-    }
-    isChecking = false;
-  }, 1000);
-
+  resetGame();
 });
