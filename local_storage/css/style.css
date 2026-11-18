@@ -163,7 +163,8 @@ main {
 
 
 .restart-button,
-.nextstage-button {
+.nextstage-button,
+.remove-data-button {
     width: 320px;
     min-height: 44px;
     text-align: center;

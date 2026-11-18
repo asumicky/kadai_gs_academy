@@ -386,3 +386,24 @@ $(".newgame-button").on("click", function () {
   $(".stage").text(stage); //.stageにtextでローカルストレージのstage箱に保存してる値を入れる
   resetGame();
 });
+
+
+// * ---------------------- remove-data-buttonを押した時 --------------------- * //
+$(".remove-data-button").on("click", function () {
+  
+  if (confirm("ハイスコア・記録・ステージがすべて消えます。よろしいですか？")) {
+
+    localStorage.removeItem("stage"); //ステージをローカルストレージから削除
+    localStorage.removeItem("highScore"); //ハイスコアをローカルストレージから削除
+    localStorage.removeItem("stats"); //回数・勝率をローカルストレージから削除
+    
+    stage = 1;
+    stats = { totalGames: 0, clearGames: 0 }
+
+    resetGame();
+
+    $(".stage").text(stage); //.stageにtextでローカルストレージのstage箱に保存してる値を入れる
+  
+  }
+  
+});
