@@ -35,6 +35,28 @@ let playerHP = 100; // プレイヤーのHP
 let stats;
 let stage = 1;
 const maxStage = 3;
+let playerName;
+
+
+
+// ========= ページを開いた時 ============
+if(localStorage.getItem("savedName")) {
+    playerName = localStorage.getItem("savedName");
+    console.log(playerName);
+    $(".player-name").text(playerName);
+} else {
+    isChecking = true;
+    $(".play-first-box").css("display", "flex");
+}
+$(".playstart-button").on("click", function () {
+      playerName = $('#player-name-input').val();// ① 入力欄の値を playerName に入れる
+      localStorage.setItem("savedName",playerName);// ② 保存する
+      console.log(playerName);
+      $(".player-name").text(playerName);
+      $(".play-first-box").css("display", "none");
+      isChecking = false;
+});
+
 
 
 
@@ -64,7 +86,9 @@ if (localStorage.getItem("stats")) {
     console.log(stats);
 }
 
-// --------- ステージ数の取得 ------------ //
+
+
+// ========= ステージ数の取得 ============
 if (localStorage.getItem("stage")) {
     stage = Number(localStorage.getItem("stage"));
     console.log(stage);
@@ -151,13 +175,9 @@ $(".card").on("click", function () {
     return;
   }
 
-
-
-
-
   // --- 1枚目 / 2枚目をめくる ---
   if (firstCard === null) {
-    // まだ1枚もめくっていない場合（これが1枚目）
+    // まだ1枚もめくっていない場合
     // if ($(this).hasClass("close-card")) { // .cardがclose-cardクラスの場合
     firstCard = $(this).find(".card-back").text();
     console.log(firstCard);
