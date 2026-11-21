@@ -40,7 +40,21 @@
             <div class="player"><img src="images/undoukai_pyramid.png" alt="プレイヤー" width="150px"></div>
         </div>
 
-
+        <!-- 名前が記録されてない時（初めて遊ぶ時）に表示される画面 -->
+        <div class="play-first-box">
+            <div class="play-first-box-inner">
+                <h1>しんけいすいじゃくバトル</h1>
+                <h2>遊び方</h2>
+                <ul>
+                    <li>カードを　めくろう！　おなじ　ぶきのカードを　そろえると　こうげきできるよ</li>
+                    <li>もし　ちがう　カードを　えらんで　しまうと　たいりょくが　へるよ</li>
+                    <li>こうげきの　ほかにも　かいふくや　たいりょくを　いれかえる　とくしゅカードも　あるよ</li>
+                </ul>
+                <p>あなたのなまえを入れてね</p>
+                <input type="text" id="player-name-input">
+                <div class="playstart-button">ゲームスタート</div>
+            </div>
+        </div>
 
         <!-- クリアボックス -->
         <div class="clear-box">
@@ -68,8 +82,10 @@
 
         <!-- ゲームオーバー -->
         <div class="gameover-box">
-            <P>ゲームオーバー😭</P>
-            <div class="restart-button">もう一度遊ぶ</div>
+            <div class="gameover-box-inner">
+                <P>ゲームオーバー😭</P>
+                <div class="restart-button">もう一度遊ぶ</div>
+            </div>
         </div>
 
         <!-- データ消去ボタン -->

@@ -103,10 +103,11 @@ main {
 
 .clear-box,
 .gameover-box,
-.all-clear-box {
+.all-clear-box,
+.play-first-box {
     background-color: #fff;
-    width: 500px;
-    height: 300px;
+    min-width: 500px;
+    padding: 40px;
     align-items: center;
     display: none;
     position: fixed;
@@ -116,7 +117,9 @@ main {
     border-radius: 32px;
 }
 
-.clear-box-inner {
+.clear-box-inner,
+.gameover-box-inner,
+.play-first-box-inner {
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -165,7 +168,8 @@ main {
 .restart-button,
 .nextstage-button,
 .newgame-button,
-.remove-data-button {
+.remove-data-button,
+.playstart-button {
     width: 320px;
     min-height: 44px;
     text-align: center;
