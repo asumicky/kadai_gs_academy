@@ -9,7 +9,13 @@
 </head>
 <body>
     <main>
+
+        <!-- ヘッダーダメージバー -->
         <div class="damage-bar-block">
+            <div class="enemy-data">
+                <p class="enemy-score"></p>
+                <p class="enemy-name"></p>
+            </div>
             <div class="enemy-bar">
                 <div class="enemy-bar-inner"></div>
             </div>
@@ -20,12 +26,23 @@
             <div class="player-bar">
                 <div class="player-bar-inner"></div>
             </div>
+            <div class="player-data">
+                <p class="player-name"></p>
+                <p class="player-score"></p>
+            </div>
         </div>
+
+
+        <!-- カードとユーザーと敵のイメージ画像 -->
         <div class="play-area-block">
             <div class="computer"><img src="images/alien_grey.png" alt="コンピューター" width="150px"></div>
             <div class="vertical"></div>
             <div class="player"><img src="images/undoukai_pyramid.png" alt="プレイヤー" width="150px"></div>
         </div>
+
+
+
+        <!-- クリアボックス -->
         <div class="clear-box">
             <div class="clear-box-inner">
                 <p>クリア！</p>
@@ -36,6 +53,8 @@
                 <div class="nextstage-button"><p class="stage"></p>に行く</div>
             </div>
         </div>
+
+        <!-- オールクリア（全クリア）ボックス -->
         <div class="all-clear-box">
             <div class="clear-box-inner">
                 <p>全ステージクリア！</p>
@@ -46,13 +65,19 @@
                 <div class="newgame-button">もう一度遊ぶ</div>
             </div>
         </div>
+
+        <!-- ゲームオーバー -->
         <div class="gameover-box">
             <P>ゲームオーバー😭</P>
             <div class="restart-button">もう一度遊ぶ</div>
         </div>
+
+        <!-- データ消去ボタン -->
         <div class="remove-data-button">
             <p>データを消去</p>
         </div>
+
+
     </main>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="js/main.js"></script>
