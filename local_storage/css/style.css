@@ -126,6 +126,15 @@ main {
     gap: 16px;
 }
 
+#player-name-input {
+    background: #fff;
+    border: #222 1px solid;
+    width: 320px;
+    padding: 4px;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
 .damage-bar-block {
     display: flex;
     align-items: center;
