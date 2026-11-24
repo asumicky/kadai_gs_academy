@@ -49,7 +49,11 @@ if(localStorage.getItem("savedName")) {
     $(".play-first-box").css("display", "flex");
 }
 $(".playstart-button").on("click", function () {
-      playerName = $('#player-name-input').val();// ① 入力欄の値を playerName に入れる
+      playerName = $('#player-name-input').val().trim();// ① 入力欄の値を playerName に入れる
+      if ( playerName === "" ) {//名前入力されているかチェック
+        console.log("名前を入力してください");
+        return;
+      }
       localStorage.setItem("savedName",playerName);// ② 保存する
       console.log(playerName);
       $(".player-name").text(playerName);
