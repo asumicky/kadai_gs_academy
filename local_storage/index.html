@@ -1,98 +1,176 @@
 <!DOCTYPE html>
-<html lang="jp">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>神経衰弱</title>
+    <title>しんけいすいじゃくバトル</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800;900&family=Nunito:wght@900&display=swap">
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <main>
 
-        <!-- ヘッダーダメージバー -->
-        <div class="damage-bar-block">
-            <div class="enemy-data">
-                <p class="enemy-score"></p>
-                <p class="enemy-name"></p>
+        <!-- ゲーム画面 -->
+        <div class="game-screen">
+
+            <div class="enemy-area stage-1">
+                <div class="stage-tag">ステージ <span class="stage"></span></div>
+                <div class="enemy-character">
+                    <img class="enemy-img" src="images/enemy_stage1.png" alt="てき">
+                </div>
+                <div class="hp-row enemy-hp-row">
+                    <div class="hp-bar"><div class="hp-bar-inner enemy-bar-inner"></div></div>
+                    <div class="hp-text">
+                        <span class="enemy-name">ENEMY</span>
+                        <span class="hp-num enemy-score">100</span>
+                    </div>
+                </div>
             </div>
-            <div class="enemy-bar">
-                <div class="enemy-bar-inner"></div>
+
+            <div class="card-area">
+                <div class="vertical"></div>
+                <div class="card-info-button">カードせつめいをみる</div>
             </div>
-            <div class="stage-block">
-                <p>VS</p>
-                <p class="stage"></p>
-            </div>
-            <div class="player-bar">
-                <div class="player-bar-inner"></div>
-            </div>
-            <div class="player-data">
+
+            <div class="player-area">
                 <p class="player-name"></p>
-                <p class="player-score"></p>
+                <div class="hp-row">
+                    <div class="hp-bar"><div class="hp-bar-inner player-bar-inner"></div></div>
+                    <div class="hp-text"><span class="hp-num player-score">100</span></div>
+                </div>
             </div>
+
         </div>
 
+        <div class="remove-data-button"><p>データを消去</p></div>
 
-        <!-- カードとユーザーと敵のイメージ画像 -->
-        <div class="play-area-block">
-            <div class="computer"><img src="images/alien_grey.png" alt="コンピューター" width="150px"></div>
-            <div class="vertical"></div>
-            <div class="player"><img src="images/undoukai_pyramid.png" alt="プレイヤー" width="150px"></div>
-        </div>
 
-        <!-- 名前が記録されてない時（初めて遊ぶ時）に表示される画面 -->
+        <!-- ===== 初回起動画面 ===== -->
         <div class="play-first-box">
             <div class="play-first-box-inner">
-                <h1>しんけいすいじゃくバトル</h1>
-                <h2>遊び方</h2>
-                <ul>
-                    <li>カードを　めくろう！　おなじ　ぶきのカードを　そろえると　こうげきできるよ</li>
-                    <li>もし　ちがう　カードを　えらんで　しまうと　たいりょくが　へるよ</li>
-                    <li>こうげきの　ほかにも　かいふくや　たいりょくを　いれかえる　とくしゅカードも　あるよ</li>
-                </ul>
-                <p>あなたのなまえを入れてね</p>
-                <input type="text" id="player-name-input">
-                <div class="playstart-button">ゲームスタート</div>
+                <div class="start-top">
+                    <h1><img class="game-logo" src="images/logo.png" alt="しんけいすいじゃくバトル"></h1>
+                    <div class="panel">
+                        <div class="panel-inner">
+                            <p class="panel-title"><span class="diamond diamond-s"></span><span class="diamond diamond-l"></span>あそびかた<span class="diamond diamond-l"></span><span class="diamond diamond-s"></span></p>
+                            <ul class="howto-list">
+                                <li>カードを　めくろう！<br>おなじ　ぶきのカードを　そろえると　こうげきできるよ</li>
+                                <li>もし　ちがう　カードを　えらんで　しまうと　たいりょくが　へるよ</li>
+                                <li>こうげきの　ほかにも　かいふくや　たいりょくを　こうかんする　とくべつな　カードも　あるよ</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="name-block">
+                    <p class="name-label">あなたのなまえをおしえて</p>
+                    <input type="text" id="player-name-input">
+                </div>
+                <div class="orange-button playstart-button">ゲームスタート</div>
             </div>
         </div>
 
-        <!-- クリアボックス -->
-        <div class="clear-box">
-            <div class="clear-box-inner">
-                <p>クリア！</p>
-                <div class="highScore-box">ハイスコア<p class="highScore"></p></div>
-                <div class="totalGames-box">ゲーム回数<p class="totalGames"></p></div>
-                <div class="clearGames-box">クリア回数<p class="clearGames"></p></div>
-                <div class="winRate-box">勝率<p class="winRate"></p>%</div>
-                <div class="nextstage-button"><p class="stage"></p>に行く</div>
+
+        <!-- ===== カードせつめいモーダル ===== -->
+        <div class="overlay card-info-modal">
+            <div class="panel modal">
+                <div class="panel-inner">
+                    <div class="close-circle card-info-close"><img src="images/close.svg" alt="とじる"></div>
+                    <div class="card-info-scroll">
+                    <p class="panel-title"><span class="diamond diamond-s"></span><span class="diamond diamond-l"></span>カードせつめい<span class="diamond diamond-l"></span><span class="diamond diamond-s"></span></p>
+                    <div class="info-body">
+                        <div class="cream-box attack-box">
+                            <div class="attack-group">
+                                <div class="mini-cards"><img src="images/cards/boomerang.png" alt=""><img src="images/cards/gun.png" alt=""><img src="images/cards/fist.png" alt=""><img src="images/cards/dagger.png" alt=""></div>
+                                <p>こうげき：15</p>
+                            </div>
+                            <hr class="dash">
+                            <div class="attack-group">
+                                <div class="mini-cards"><img src="images/cards/bow.png" alt=""><img src="images/cards/axe.png" alt=""><img src="images/cards/wand.png" alt=""></div>
+                                <p>こうげき：17</p>
+                            </div>
+                            <hr class="dash">
+                            <div class="attack-group">
+                                <div class="mini-cards"><img src="images/cards/dynamite.png" alt=""><img src="images/cards/bomb.png" alt=""><img src="images/cards/sword.png" alt=""></div>
+                                <p>こうげき：20</p>
+                            </div>
+                        </div>
+                        <div class="special-row"><div class="mini-cards"><img src="images/cards/swap.png" alt=""></div><p>たいりょくこうかん</p></div>
+                        <hr class="dash">
+                        <div class="special-row"><div class="mini-cards"><img src="images/cards/star.png" alt=""></div><p>3かいれんぞくでカードを引く</p></div>
+                        <hr class="dash">
+                        <div class="special-row"><div class="mini-cards"><img src="images/cards/shield.png" alt=""></div><p>1かいこうげきをふせぐ</p></div>
+                        <hr class="dash">
+                        <div class="special-row"><div class="mini-cards"><img src="images/cards/swirl.png" alt=""></div><p>のこりのカードをシャッフル</p></div>
+                        <hr class="dash">
+                        <div class="special-row"><div class="mini-cards"><img src="images/cards/capsule_mint.png" alt=""><img src="images/cards/capsule_pink.png" alt=""></div><p>たいりょくかいふく</p></div>
+                        <hr class="dash">
+                    </div>
+                    <div class="text-close card-info-close"><img src="images/close.svg" alt="">とじる</div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- オールクリア（全クリア）ボックス -->
-        <div class="all-clear-box">
-            <div class="clear-box-inner">
-                <p>全ステージクリア！</p>
-                <div class="highScore-box">ハイスコア<p class="highScore"></p></div>
-                <div class="totalGames-box">ゲーム回数<p class="totalGames"></p></div>
-                <div class="clearGames-box">クリア回数<p class="clearGames"></p></div>
-                <div class="winRate-box">勝率<p class="winRate"></p>%</div>
-                <div class="newgame-button">もう一度遊ぶ</div>
+
+        <!-- ===== クリアモーダル ===== -->
+        <div class="overlay clear-box">
+            <div class="panel modal">
+                <div class="stage-tag modal-stage-tag">ステージ <span class="clear-stage"></span></div>
+                <div class="panel-inner clear-inner">
+                    <div class="close-circle clear-close"><img src="images/close.svg" alt="とじる"></div>
+                    <p class="panel-title"><span class="diamond diamond-s gold"></span><span class="diamond diamond-l orange"></span>クリア<span class="diamond diamond-l orange"></span><span class="diamond diamond-s gold"></span></p>
+                    <div class="cream-box stats-list">
+                        <div class="stats-row"><span class="stats-label">ハイスコア</span><span class="stats-num highScore">-</span></div>
+                        <hr class="dash">
+                        <div class="stats-row"><span class="stats-label">ゲームかいすう</span><span class="stats-num totalGames">-</span><span>かい</span></div>
+                        <hr class="dash">
+                        <div class="stats-row"><span class="stats-label">クリアかいすう</span><span class="stats-num clearGames">-</span><span>かい</span></div>
+                        <hr class="dash">
+                        <div class="stats-row"><span class="stats-label">しょうりつ</span><span class="stats-num winRate">-</span><span>%</span></div>
+                    </div>
+                    <div class="orange-button nextstage-button">ステージ<span class="stage"></span>に行く</div>
+                </div>
             </div>
         </div>
 
-        <!-- ゲームオーバー -->
-        <div class="gameover-box">
-            <div class="gameover-box-inner">
-                <P>ゲームオーバー😭</P>
-                <div class="restart-button">もう一度遊ぶ</div>
+
+        <!-- ===== 全クリアモーダル ===== -->
+        <div class="overlay all-clear-box">
+            <div class="panel modal">
+                <div class="panel-inner all-clear-inner">
+                    <div class="close-circle all-clear-close"><img src="images/close.svg" alt="とじる"></div>
+                    <div class="all-clear-head">
+                        <img class="crown-img" src="images/crown.png" alt="">
+                        <p class="all-clear-title"><span>すべてのステージ</span><br>クリア</p>
+                    </div>
+                    <div class="cream-box stats-list">
+                        <div class="stats-row"><span class="stats-label">ハイスコア</span><span class="stats-num highScore">-</span></div>
+                        <hr class="dash">
+                        <div class="stats-row"><span class="stats-label">ゲームかいすう</span><span class="stats-num totalGames">-</span><span>かい</span></div>
+                        <hr class="dash">
+                        <div class="stats-row"><span class="stats-label">クリアかいすう</span><span class="stats-num clearGames">-</span><span>かい</span></div>
+                        <hr class="dash">
+                        <div class="stats-row"><span class="stats-label">しょうりつ</span><span class="stats-num winRate">-</span><span>%</span></div>
+                    </div>
+                    <div class="orange-button newgame-button">もう一度遊ぶ</div>
+                </div>
             </div>
         </div>
 
-        <!-- データ消去ボタン -->
-        <div class="remove-data-button">
-            <p>データを消去</p>
-        </div>
 
+        <!-- ===== ゲームオーバーモーダル ===== -->
+        <div class="overlay gameover-box">
+            <div class="panel modal">
+                <div class="panel-inner gameover-inner">
+                    <div class="close-circle gameover-close"><img src="images/close.svg" alt="とじる"></div>
+                    <p class="panel-title">ゲームオーバー</p>
+                    <div class="orange-button restart-button">もう一度遊ぶ</div>
+                </div>
+            </div>
+        </div>
 
     </main>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
